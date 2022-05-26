@@ -1,3 +1,4 @@
+//-----------------1----------------
 // import {Routes, Route} from "react-router-dom"
 // import Index from "../pages/Index"
 // import Show from "../pages/Show"
@@ -12,20 +13,69 @@
 //     </main>
 //       )
 //   }
-  
+//-----------------2----------------
+// import { useEffect, useState } from "react"
+// import { Routes, Route } from "react-router-dom"
+// import Index from "../pages/Index"
+// import Show from "../pages/Show"
+
+// function Main(props) {
+
+//   const [people, setPeople] = useState(null)
+
+//   const URL = "https://blooming-oasis-55976.herokuapp.com/people"
+
+//   const getPeople = async () => {
+//     // const data = await fetch(URL).then(res => res.json)
+//     const response = await fetch(URL)
+//     const data = await response.json()
+//     setPeople(data)
+//   }
+
+//   const createPeople = async (person) => {
+//     // make post request to create people
+//     //this replaces methodoverride? something like that
+//     await fetch(URL, {
+//       method: "POST",
+//       headers: {
+//         "Content-Type": "Application/json",
+//       },
+//       body: JSON.stringify(person),
+//     })
+//     // update list of people
+//     getPeople()
+//   }
+
+//   useEffect(() => {getPeople()}, [])
+
+//   return (
+//     <main>
+//       <Routes>
+//         <Route
+//           exact
+//           path="/"
+//           element={<Index people={people} createPeople={createPeople} />}
+//         />
+//         <Route path="/people/:id" element={<Show people={people} />} />
+//       </Routes>
+//     </main>
+//   )
+// }
+
+// export default Main
+
+
 import { useEffect, useState } from "react"
-import { Routes, Route } from "react-router-dom"
+import { Route, Routes } from "react-router-dom"
 import Index from "../pages/Index"
 import Show from "../pages/Show"
 
 function Main(props) {
-
   const [people, setPeople] = useState(null)
 
-  const URL = "https://blooming-oasis-55976.herokuapp.com/people"
+  const URL = "https://blooming-oasis-55976.herokuapp.com/people/"
 
   const getPeople = async () => {
-    // const data = await fetch(URL).then(res => res.json)
     const response = await fetch(URL)
     const data = await response.json()
     setPeople(data)
@@ -33,7 +83,6 @@ function Main(props) {
 
   const createPeople = async (person) => {
     // make post request to create people
-    //this replaces methodoverride? something like that
     await fetch(URL, {
       method: "POST",
       headers: {
@@ -45,21 +94,51 @@ function Main(props) {
     getPeople()
   }
 
-  useEffect(() => {getPeople()}, [])
+  const updatePeople = async (person, id) => {
+    // make put request to create people
+    await fetch(URL + id, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "Application/json",
+      },
+      body: JSON.stringify(person),
+    })
+    // update list of people
+    getPeople()
+  }
+
+  const deletePeople = async (id) => {
+    // make delete request to create people
+    await fetch(URL + id, {
+      method: "DELETE",
+    })
+    // update list of people
+    getPeople()
+  }
+
+  useEffect(() => getPeople(), [])
 
   return (
     <main>
       <Routes>
+        <Route exact path="/" element={
+          <Index
+            people={people}
+            createPeople={createPeople}
+          />} />
         <Route
-          exact
-          path="/"
-          element={<Index people={people} createPeople={createPeople} />}
+          path="/people/:id"
+          element={
+            <Show
+              people={people}
+              updatePeople={updatePeople}
+              deletePeople={deletePeople}
+            />
+          }
         />
-        <Route path="/people/:id" element={<Show people={people} />} />
       </Routes>
     </main>
   )
 }
 
 export default Main
-  
