@@ -116,7 +116,7 @@ function Main(props) {
     getPeople()
   }
 
-  useEffect(() => getPeople(), [])
+  useEffect(() => {getPeople()}, [])
 
   return (
     <main>
